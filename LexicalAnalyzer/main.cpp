@@ -8,19 +8,16 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include "LexicalAnalyzer.h"
 
 /*
  * Main Starting point of the program
  */
 int main(int argc, char** argv) {
     if (argc > 1) {
-        std::ifstream inputFile(argv[1]);
+        std::fstream inputFile(argv[1]);
         if (inputFile.is_open()) {
-            std::string inputLine;
-            while (getline(inputFile,inputLine)) {
-                std::cout << inputLine << std::endl;
-            }
-            std::cout << "Finished Reading file" << std::endl;
+            LexicalAnalyzer* lexy = new LexicalAnalyzer(inputFile);
         }
         else {
             std::cout << "Bad Input file" << std::endl;
