@@ -1,6 +1,6 @@
 /* 
  * File:   main.cpp
- * Author: Michael
+ * Author: Michael Frederick (n00725913)
  *
  * Created on January 16, 2017, 2:41 PM
  */

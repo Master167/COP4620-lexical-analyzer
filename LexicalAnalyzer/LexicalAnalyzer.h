@@ -1,12 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /* 
  * File:   LexicalAnalyzer.h
- * Author: Michael
+ * Author: Michael Frederick (n00725913)
  *
  * Created on January 16, 2017, 3:32 PM
  */
@@ -18,14 +12,30 @@
 #include <string>
 #include <iostream>
 
-
 class LexicalAnalyzer {
 public:
     LexicalAnalyzer(std::fstream& inputFile);
-    LexicalAnalyzer(const LexicalAnalyzer& orig);
-    virtual ~LexicalAnalyzer();
+    bool scanFile();
+    bool scanFile(std::fstream& inputFile);
 private:
+    // Class Variables
+    char currentCharacter;
+    int currentLineIndex;
+    std::fstream& currentFile;
+    std::string currentLine;
+    std::string outputFilename;
 
+    char specialCharacters[];
+    std::string keywords[];
+
+    // Class functions
+    bool analyzeDigit();
+    bool analyzeLetter();
+    bool analyzeSpecialCharacter();
+    bool writeToFile(std::string outputLine);
+    
+    void moveToNextCharacter();
+    void moveToNextline();
 };
 
 #endif /* LEXICALANALYZER_H */

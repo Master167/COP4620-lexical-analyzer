@@ -1,3 +1,11 @@
+# Netbeans specific
+*.o.d
+*.mk
+*.bash
+**/nbproject/*
+*.xml
+*.inc
+
 # Compiled Object files
 *.slo
 *.lo
