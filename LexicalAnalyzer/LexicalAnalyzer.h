@@ -11,12 +11,13 @@
 #include <fstream>
 #include <string>
 #include <iostream>
+#include <new>
 
 class LexicalAnalyzer {
 public:
     LexicalAnalyzer(std::fstream& inputFile);
     bool scanFile();
-    bool scanFile(std::fstream& inputFile);
+    bool is_ready();
 private:
     // Class Variables
     char currentCharacter;
@@ -25,8 +26,8 @@ private:
     std::string currentLine;
     std::string outputFilename;
 
-    char specialCharacters[];
-    std::string keywords[];
+    char* specialCharacters;
+    std::string* keywords;
 
     // Class functions
     bool analyzeDigit();
@@ -34,8 +35,8 @@ private:
     bool analyzeSpecialCharacter();
     bool writeToFile(std::string outputLine);
     
-    void moveToNextCharacter();
-    void moveToNextline();
+    bool moveToNextCharacter();
+    bool moveToNextline();
 };
 
 #endif /* LEXICALANALYZER_H */

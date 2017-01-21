@@ -9,21 +9,25 @@
 
 LexicalAnalyzer::LexicalAnalyzer(std::fstream& inputFile) :
     currentFile(inputFile) {
-    this->scanFile();
+    // Initialize special characters and keywords
+    this->specialCharacters = new (std::nothrow) char[16];
+    //{'+','-','*','/','<','>','=','!',';',',','(',')','{','}','[',']'}
+    this->keywords = new (std::nothrow) std::string[7];
+    //{"else","if","int","float","return","void","while"}
+    this->currentLineIndex = -1;
+}
+
+bool LexicalAnalyzer::is_ready() {
+    return (this->keywords != nullptr) && (this->specialCharacters != nullptr);
 }
 
 bool LexicalAnalyzer::scanFile() {
     bool results = true;
-    while (getline(this->currentFile,this->currentLine)) {
-        std::cout << this->currentLine << std::endl;
+    while (this->moveToNextCharacter()) {
+        //Check what the character is
     }
     std::cout << "Finished Reading file" << std::endl;
     return results;
-}
-
-bool LexicalAnalyzer::scanFile(std::fstream& inputFile) {
-    this->currentFile = inputFile;
-    return this->scanFile();
 }
 
 bool LexicalAnalyzer::analyzeDigit() {
@@ -42,11 +46,39 @@ bool writeToFile(std::string outputLine) {
     return false;
 }
 
-void LexicalAnalyzer::moveToNextCharacter() {
-    
+bool LexicalAnalyzer::moveToNextCharacter() {
+    bool result = false;
+    this->currentLineIndex++;
+    if (this->currentLineIndex == this->currentLine.length()) {
+        // Move to next line
+        if (this->moveToNextline()) {
+            result = true;
+        }
+    }
+    else if (this->currentLineIndex < this->currentLine.length()) {
+        result = true;
+    }
+    if (result) {
+        this->currentCharacter = this->currentLine[this->currentLineIndex];
+    }
+    return result;
 }
 
-void LexicalAnalyzer::moveToNextline() {
-    
+bool LexicalAnalyzer::moveToNextline() {
+    bool result = false;
+    std::string temp;
+    while (temp.length() <= 0) {
+        if (!std::getline(this->currentFile,temp)) {
+            // getLine failed, we have reached the end of the file
+            break;
+        }
+    }
+    if (temp.length() > 0) {
+        result = true;
+        this->currentLine = temp;
+        this->currentLineIndex = 0;
+        std::cout << "INPUT: " << temp << std::endl;
+    }
+    return result;
 }
 

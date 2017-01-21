@@ -28,8 +28,9 @@
         <runcommandpicklist>
           <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" testfile</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" testfile1</runcommandpicklistitem>
         </runcommandpicklist>
-        <runcommand>"${OUTPUT_PATH}" testfile</runcommand>
+        <runcommand>"${OUTPUT_PATH}" testfile1</runcommand>
         <rundir>D:\GitHub\COP4620-lexical-analyzer</rundir>
         <buildfirst>true</buildfirst>
         <terminal-type>0</terminal-type>

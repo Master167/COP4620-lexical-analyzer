@@ -18,6 +18,13 @@ int main(int argc, char** argv) {
         std::fstream inputFile(argv[1]);
         if (inputFile.is_open()) {
             LexicalAnalyzer* lexy = new LexicalAnalyzer(inputFile);
+            if (lexy->is_ready()) {
+                lexy->scanFile();
+            }
+            else {
+                std::cout << "Unable to allocate memory for lexical analyzer";
+            }
+            delete lexy;
         }
         else {
             std::cout << "Bad Input file" << std::endl;
