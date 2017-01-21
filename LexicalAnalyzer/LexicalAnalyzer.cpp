@@ -51,6 +51,15 @@ bool LexicalAnalyzer::scanFile() {
     if (this->isReady()) {
         while (this->moveToNextCharacter()) {
             //Check what the character is and decide
+            if (std::isalpha(this->currentCharacter)) {
+                this->analyzeLetter();
+            }
+            else if (std::isdigit(this->currentCharacter)) {
+                //this->analyzeDigit();
+            }
+            else if (!std::isspace(this->currentCharacter)){
+                //this->analyzeSpecialCharacter();
+            }
         }
         std::cout << "Finished Reading file" << std::endl;
     }
@@ -62,14 +71,50 @@ bool LexicalAnalyzer::scanFile() {
 
 // Private functions
 bool LexicalAnalyzer::analyzeDigit() {
+    std::cout << "Analyze Digit" << std::endl;
     return false;
 }
 
 bool LexicalAnalyzer::analyzeLetter() {
-    return false;
+    bool result = false;
+    bool foundTerm = false;
+    std::string identifier = "";
+    identifier.append(1, this->currentCharacter);
+    char peekCharacter;
+    while (!foundTerm) {
+        peekCharacter = this->peekAtNextCharacter();
+        if (peekCharacter != '$') {
+            if (std::isalpha(peekCharacter)) {
+                this->moveToNextCharacter();
+                identifier.append(1, this->currentCharacter);
+            }
+            else {
+                foundTerm = true;
+            }
+        }
+        else {
+            // Reached end of line
+            // I need to analyze what I have
+            foundTerm = true;
+        }
+    }
+    // peekCharacter could be a delimiter, digit, or special character
+    if (this->searchKeyword(identifier)) {
+        std::cout << "KEYWORD:" << identifier << std::endl;
+        result = true;
+    }
+    //else if (identifier.compare("mod") == 0) {
+    //    std::cout << identifier << std::endl;
+    //}
+    else {
+        std::cout << "ID:" << identifier << std::endl;
+        // ADD TO SYMBOL TABLE
+    }
+    return result;
 }
 
 bool LexicalAnalyzer::analyzeSpecialCharacter() {
+    std::cout << "Analyze Special Character" << std::endl;
     return false;
 }
 
@@ -108,8 +153,31 @@ bool LexicalAnalyzer::moveToNextline() {
         result = true;
         this->currentLine = temp;
         this->currentLineIndex = 0;
-        std::cout << "INPUT: " << temp << std::endl;
+        std::cout << "INPUT:" << temp << std::endl;
     }
     return result;
+}
+
+char LexicalAnalyzer::peekAtNextCharacter() {
+    char peekCharacter = '$';
+    if (this->currentLineIndex + 1 < this->currentLine.length()) {
+        peekCharacter = this->currentLine[this->currentLineIndex + 1];
+    }
+    return peekCharacter;
+}
+
+bool LexicalAnalyzer::searchKeyword(std::string search) {
+    bool found = false;
+    for (int i = 0; i < 7; i++) {
+        if (search.compare(this->keywords[i]) == 0) {
+            found = true;
+        }
+    }
+    return found;
+}
+
+bool LexicalAnalyzer::searchSpecialCharacter(char search) {
+    std::cout << "searchSpecialCharacter not implemented yet";
+    return false;
 }
 

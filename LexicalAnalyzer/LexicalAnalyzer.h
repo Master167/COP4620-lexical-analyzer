@@ -12,6 +12,7 @@
 #include <string>
 #include <iostream>
 #include <new>
+#include <cctype>
 
 class LexicalAnalyzer {
 public:
@@ -37,6 +38,9 @@ private:
     
     bool moveToNextCharacter();
     bool moveToNextline();
+    char peekAtNextCharacter();
+    bool searchKeyword(std::string search);
+    bool searchSpecialCharacter(char search);
 };
 
 #endif /* LEXICALANALYZER_H */
