@@ -15,10 +15,11 @@
  */
 int main(int argc, char** argv) {
     if (argc > 1) {
+        std::string filename = argv[1];
         std::fstream inputFile(argv[1]);
         if (inputFile.is_open()) {
-            LexicalAnalyzer* lexy = new LexicalAnalyzer(inputFile);
-            if (lexy->is_ready()) {
+            LexicalAnalyzer* lexy = new LexicalAnalyzer(inputFile, filename);
+            if (lexy->isReady()) {
                 lexy->scanFile();
             }
             else {

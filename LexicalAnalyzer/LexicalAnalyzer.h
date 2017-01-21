@@ -15,16 +15,16 @@
 
 class LexicalAnalyzer {
 public:
-    LexicalAnalyzer(std::fstream& inputFile);
-    bool scanFile();
-    bool is_ready();
+    LexicalAnalyzer(std::fstream& inputFile, std::string filename);
+    bool isReady();
+    bool scanFile();    
+    std::string outputFilename;
 private:
     // Class Variables
     char currentCharacter;
     int currentLineIndex;
     std::fstream& currentFile;
     std::string currentLine;
-    std::string outputFilename;
 
     char* specialCharacters;
     std::string* keywords;
