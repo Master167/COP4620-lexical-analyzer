@@ -41,6 +41,8 @@ private:
     char peekAtNextCharacter();
     bool searchKeyword(std::string search);
     bool searchSpecialCharacter(char search);
+
+    bool errorLine();
 };
 
 #endif /* LEXICALANALYZER_H */

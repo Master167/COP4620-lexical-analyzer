@@ -57,8 +57,8 @@ bool LexicalAnalyzer::scanFile() {
             else if (std::isdigit(this->currentCharacter)) {
                 //this->analyzeDigit();
             }
-            else if (!std::isspace(this->currentCharacter)){
-                //this->analyzeSpecialCharacter();
+            else if (std::ispunct(this->currentCharacter)){
+                this->analyzeSpecialCharacter();
             }
         }
         std::cout << "Finished Reading file" << std::endl;
@@ -99,6 +99,10 @@ bool LexicalAnalyzer::analyzeLetter() {
         }
     }
     // peekCharacter could be a delimiter, digit, or special character
+    //if ((std::isdigit(peekCharacter) | std::ispunct(peekCharacter)) & !std::isspace(peekCharacter)) {
+    //    result = this->errorLine();
+    //}
+    //else 
     if (this->searchKeyword(identifier)) {
         std::cout << "KEYWORD:" << identifier << std::endl;
         result = true;
@@ -108,14 +112,71 @@ bool LexicalAnalyzer::analyzeLetter() {
     //}
     else {
         std::cout << "ID:" << identifier << std::endl;
+        result = true;
         // ADD TO SYMBOL TABLE
     }
     return result;
 }
 
 bool LexicalAnalyzer::analyzeSpecialCharacter() {
-    std::cout << "Analyze Special Character" << std::endl;
-    return false;
+    bool result = false;
+    int commentCounter = 0;
+    char peekCharacter;
+    if (this->searchSpecialCharacter(this->currentCharacter)) {
+        if (this->currentCharacter == '/') {
+            peekCharacter = this->peekAtNextCharacter();
+            if (peekCharacter == '*') {
+                commentCounter++;
+                this->moveToNextCharacter();
+                while (commentCounter > 0) {
+                    if (!this->moveToNextCharacter()) {
+                        // We have reached end of file
+                        break;
+                    }
+                    if (this->currentCharacter == '*') {
+                        peekCharacter = this->peekAtNextCharacter();
+                        if (peekCharacter == '/') {
+                            commentCounter--;
+                            this->moveToNextCharacter();
+                        }
+                    }
+                    else if (this->currentCharacter == '/') {
+                        peekCharacter = this->peekAtNextCharacter();
+                        if (peekCharacter == '*') {
+                            commentCounter++;
+                            this->moveToNextCharacter();
+                        }
+                    }
+                }
+            }
+            else if (peekCharacter == '/') {
+                this->moveToNextline();
+                result == true;
+            }
+            else {
+                std::cout << this->currentCharacter << std::endl;
+            }
+        }
+        else if (this->currentCharacter == '<' | this->currentCharacter == '>' | this->currentCharacter == '=' | this->currentCharacter == '!') {
+            peekCharacter = this->peekAtNextCharacter();
+            if (peekCharacter == '=') {
+                std::cout << this->currentCharacter;
+                if (this->moveToNextCharacter()) {
+                    std::cout << this->currentCharacter << std::endl;
+                }
+            }
+            else if (this->currentCharacter == '!') {
+                result = this->errorLine();
+            }
+        }
+        else {
+            std::cout << this->currentCharacter << std::endl;
+        }
+    }
+    else {
+        result = this->errorLine();
+    }
+    return result;
 }
 
 bool writeToFile(std::string outputLine) {
@@ -177,7 +238,19 @@ bool LexicalAnalyzer::searchKeyword(std::string search) {
 }
 
 bool LexicalAnalyzer::searchSpecialCharacter(char search) {
-    std::cout << "searchSpecialCharacter not implemented yet";
-    return false;
+    bool found = false;
+    for (int i = 0; i < 16; i++) {
+        if (search == this->specialCharacters[i]) {
+            found = true;
+        }
+    }
+    return found;
 }
 
+bool LexicalAnalyzer::errorLine() {
+    bool endProgram = false;
+    std::string remainingLine = this->currentLine.substr(this->currentLineIndex);
+    std::cout << "Error:" << remainingLine << std::endl;
+    endProgram = this->moveToNextline();
+    return endProgram;
+}
