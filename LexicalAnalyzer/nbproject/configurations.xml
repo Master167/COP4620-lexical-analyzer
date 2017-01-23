@@ -5,6 +5,8 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>LexicalAnalyzer.h</itemPath>
+      <itemPath>Symbol.h</itemPath>
+      <itemPath>SymbolTable.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -14,6 +16,8 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>LexicalAnalyzer.cpp</itemPath>
+      <itemPath>Symbol.cpp</itemPath>
+      <itemPath>SymbolTable.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -42,6 +46,14 @@
       </item>
       <item path="LexicalAnalyzer.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Symbol.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Symbol.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SymbolTable.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SymbolTable.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
@@ -68,6 +80,14 @@
       <item path="LexicalAnalyzer.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="LexicalAnalyzer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Symbol.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Symbol.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SymbolTable.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SymbolTable.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>

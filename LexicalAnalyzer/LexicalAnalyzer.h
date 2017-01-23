@@ -13,12 +13,14 @@
 #include <iostream>
 #include <new>
 #include <cctype>
+#include "SymbolTable.h"
+#include "Symbol.h"
 
 class LexicalAnalyzer {
 public:
     LexicalAnalyzer(std::fstream& inputFile, std::string filename);
     bool isReady();
-    bool scanFile();    
+    bool scanFile(SymbolTable* symtab);    
     std::string outputFilename;
 private:
     // Class Variables
@@ -26,7 +28,7 @@ private:
     int currentLineIndex;
     std::fstream& currentFile;
     std::string currentLine;
-
+    SymbolTable* symTab;
     char* specialCharacters;
     std::string* keywords;
 

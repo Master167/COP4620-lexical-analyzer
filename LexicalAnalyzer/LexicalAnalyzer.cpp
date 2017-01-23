@@ -46,9 +46,10 @@ bool LexicalAnalyzer::isReady() {
     return (this->keywords != nullptr) && (this->specialCharacters != nullptr);
 }
 
-bool LexicalAnalyzer::scanFile() {
+bool LexicalAnalyzer::scanFile(SymbolTable* symtab) {
     bool results = true;
     if (this->isReady()) {
+        this->symTab = symTab;
         while (this->moveToNextCharacter()) {
             //Check what the character is and decide
             if (std::isalpha(this->currentCharacter)) {
@@ -114,6 +115,10 @@ bool LexicalAnalyzer::analyzeLetter() {
         std::cout << "ID:" << identifier << std::endl;
         result = true;
         // ADD TO SYMBOL TABLE
+        if (this->symTab != nullptr) {
+            Symbol* sym = new Symbol(identifier);
+            this->symTab->addSymbol(sym);
+        }
     }
     return result;
 }

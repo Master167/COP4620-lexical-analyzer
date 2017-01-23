@@ -9,6 +9,7 @@
 #include <string>
 #include <fstream>
 #include "LexicalAnalyzer.h"
+#include "SymbolTable.h"
 
 /*
  * Main Starting point of the program
@@ -18,9 +19,10 @@ int main(int argc, char** argv) {
         std::string filename = argv[1];
         std::fstream inputFile(argv[1]);
         if (inputFile.is_open()) {
+            SymbolTable* symTab = new SymbolTable(100);
             LexicalAnalyzer* lexy = new LexicalAnalyzer(inputFile, filename);
             if (lexy->isReady()) {
-                lexy->scanFile();
+                lexy->scanFile(symTab);
             }
             else {
                 std::cout << "Unable to allocate memory for lexical analyzer";
