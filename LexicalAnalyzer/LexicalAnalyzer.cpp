@@ -49,7 +49,7 @@ bool LexicalAnalyzer::isReady() {
 bool LexicalAnalyzer::scanFile(SymbolTable* symtab) {
     bool results = true;
     if (this->isReady()) {
-        this->symTab = symTab;
+        this->symTab = symtab;
         while (this->moveToNextCharacter()) {
             //Check what the character is and decide
             if (std::isalpha(this->currentCharacter)) {
