@@ -16,29 +16,29 @@ LexicalAnalyzer::LexicalAnalyzer(std::fstream& inputFile, std::string filename) 
     if (this->isReady()) {
         this->outputFilename = filename.append(".temp");
         // Manually loading the keywords and specialCharacters
-        this->keywords[0] = "else";
-        this->keywords[1] = "if";
-        this->keywords[2] = "int";
-        this->keywords[3] = "float";
-        this->keywords[4] = "return";
-        this->keywords[5] = "void";
-        this->keywords[6] = "while";
-        this->specialCharacters[0] = '+';
-        this->specialCharacters[1] = '*';
-        this->specialCharacters[2] = '-';
-        this->specialCharacters[3] = '/';
-        this->specialCharacters[4] = '<';
-        this->specialCharacters[5] = '>';
-        this->specialCharacters[6] = '=';
-        this->specialCharacters[7] = '!';
+        this->keywords[0] = "if";
+        this->keywords[1] = "int";
+        this->keywords[2] = "else";
+        this->keywords[3] = "void";
+        this->keywords[4] = "float";
+        this->keywords[5] = "while";
+        this->keywords[6] = "return";
+        this->specialCharacters[0] = '!';
+        this->specialCharacters[1] = '(';
+        this->specialCharacters[2] = ')';
+        this->specialCharacters[3] = '*';
+        this->specialCharacters[4] = '+';
+        this->specialCharacters[5] = ',';
+        this->specialCharacters[6] = '-';
+        this->specialCharacters[7] = '/';
         this->specialCharacters[8] = ';';
-        this->specialCharacters[9] = ',';
-        this->specialCharacters[10] = '(';
-        this->specialCharacters[11] = ')';
-        this->specialCharacters[12] = '{';
-        this->specialCharacters[13] = '}';
-        this->specialCharacters[14] = '[';
-        this->specialCharacters[15] = ']';
+        this->specialCharacters[9] = '<';
+        this->specialCharacters[10] = '=';
+        this->specialCharacters[11] = '>';
+        this->specialCharacters[12] = '[';
+        this->specialCharacters[13] = ']';
+        this->specialCharacters[14] = '{';
+        this->specialCharacters[15] = '}';
     }
 }
 
@@ -254,8 +254,28 @@ bool LexicalAnalyzer::searchSpecialCharacter(char search) {
 
 bool LexicalAnalyzer::errorLine() {
     bool endProgram = false;
-    std::string remainingLine = this->currentLine.substr(this->currentLineIndex);
+    bool continueLoop = true;
+    int startingIndex = this->currentLineIndex;
+    std::string remainingLine;
+    //Going to find the end of this current token
+    while (continueLoop) {
+        endProgram = this->moveToNextCharacter();
+        if (this->currentLineIndex == 0) {
+            continueLoop = false;
+        }
+        else if (this->searchSpecialCharacter(this->currentCharacter)) {
+            continueLoop = false;
+        }
+        else if (std::isblank(this->currentCharacter)) {
+            continueLoop = false;
+        }
+    }
+    if (this->currentLineIndex == 0) {
+        remainingLine = this->currentLine.substr(startingIndex);
+    }
+    else {
+        remainingLine = this->currentLine.substr(startingIndex, this->currentLineIndex - startingIndex);
+    }
     std::cout << "Error:" << remainingLine << std::endl;
-    endProgram = this->moveToNextline();
     return endProgram;
 }
