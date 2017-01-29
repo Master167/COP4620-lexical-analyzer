@@ -13,6 +13,7 @@ LexicalAnalyzer::LexicalAnalyzer(std::fstream& inputFile, std::string filename) 
     this->specialCharacters = new (std::nothrow) char[16];
     this->keywords = new (std::nothrow) std::string[7];
     this->currentLineIndex = -1;
+    this->scope = 0;
     if (this->isReady()) {
         this->outputFilename = filename.append(".temp");
         // Manually loading the keywords and specialCharacters
@@ -238,12 +239,12 @@ bool LexicalAnalyzer::analyzeLetter() {
     //    this->writeToFile(identifier + "\n");
     //}
     else {
-        std::cout << "ID: " << identifier << std::endl;
+        std::cout << "ID: " << identifier << " Scope: " << this->scope <<  std::endl;
         //this->writeToFile("ID: " + identifier + "\n");
         result = true;
         // ADD TO SYMBOL TABLE
         if (this->symTab != NULL) {
-            Symbol* sym = new Symbol(identifier);
+            Symbol* sym = new Symbol(identifier, this->scope);
             this->symTab->addSymbol(sym);
         }
     }
@@ -311,6 +312,12 @@ bool LexicalAnalyzer::analyzeSpecialCharacter() {
         else {
             std::cout << this->currentCharacter << std::endl;
             //this->writeToFile(this->currentCharacter + "\n");
+        }
+        if (this->currentCharacter == '{') {
+            this->scope++;
+        }
+        else if (this->currentCharacter == '}') {
+            this->scope--;
         }
     }
     else {

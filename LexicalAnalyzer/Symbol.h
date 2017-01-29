@@ -20,15 +20,17 @@ class Symbol {
 public:
     //Constructor
     Symbol();
-    Symbol(std::string identifier);
+    Symbol(std::string identifier, int depth);
     //Variables
     
     //Functions
     std::string getIdentifier();
+    int getDepth();
     bool isEqual(Symbol* sym);
 private:
     //Variables
     std::string identifier;
+    int depth;
     //std::string type; // I'll build unto this later
     //std::string value;
     

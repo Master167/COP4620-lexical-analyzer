@@ -26,6 +26,7 @@ private:
     // Class Variables
     char currentCharacter;
     int currentLineIndex;
+    int scope;
     std::fstream& currentFile;
     std::string currentLine;
     SymbolTable* symTab;
