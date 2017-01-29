@@ -92,7 +92,6 @@ void SymbolTable::printTable() {
         sym = this->table[i];
         if (!sym.isEqual(this->deadSymbol)) {
             std::cout << sym.getIdentifier() << " | " << sym.getDepth() << " | " << i << std::endl;
-            
         }
     }
     return;
