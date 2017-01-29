@@ -56,7 +56,7 @@ bool LexicalAnalyzer::scanFile(SymbolTable* symtab) {
                 this->analyzeLetter();
             }
             else if (std::isdigit(this->currentCharacter)) {
-                //this->analyzeDigit();
+                this->analyzeDigit();
             }
             else if (std::ispunct(this->currentCharacter)){
                 this->analyzeSpecialCharacter();
@@ -72,8 +72,131 @@ bool LexicalAnalyzer::scanFile(SymbolTable* symtab) {
 
 // Private functions
 bool LexicalAnalyzer::analyzeDigit() {
-    std::cout << "Analyze Digit" << std::endl;
-    return false;
+    bool result = true;
+    bool foundTerm = false;
+    bool foundError = false;
+    std::string number = "";
+    number.append(1, this->currentCharacter);
+    char peekCharacter;
+    // Get Numbers
+    while (!foundTerm) {
+        peekCharacter = this->peekAtNextCharacter();
+        if (peekCharacter != '$') {
+            if (std::isdigit(peekCharacter)) {
+                this->moveToNextCharacter();
+                number.append(1, this->currentCharacter);
+            }
+            else {
+                foundTerm = true;
+            }
+        }
+        else {
+            // Reached end of line
+            foundTerm = true;
+        }
+    }
+
+    // Check for floating point
+    if (peekCharacter == '.') {
+        if (this->currentLine.length() > this->currentLineIndex + 2) {
+            // String is long enough
+            peekCharacter = this->currentLine[this->currentLineIndex + 2];
+            if (std::isdigit(peekCharacter)) {
+                this->moveToNextCharacter();
+                number.append(1, this->currentCharacter);
+                this->moveToNextCharacter();
+                number.append(1, this->currentCharacter);
+                foundTerm = false;
+                while (!foundTerm) {
+                    peekCharacter = this->peekAtNextCharacter();
+                    if (std::isdigit(peekCharacter)) {
+                        this->moveToNextCharacter();
+                        number.append(1, this->currentCharacter);
+                    }
+                    else {
+                        foundTerm = true;
+                    }
+                }// end while
+            }
+            else {
+                foundError = true;
+            }
+        }
+        else {
+            foundError = true;
+        }
+    }
+
+    // Check for scientific notation
+    if (peekCharacter == 'E' && !foundError) {
+        if (this->currentLine.length() > this->currentLineIndex + 2) {
+            // String is long enough
+            peekCharacter = this->currentLine[this->currentLineIndex + 2];
+            if (std::isdigit(peekCharacter)) {
+                //Move Twice
+                this->moveToNextCharacter();
+                number.append(1, this->currentCharacter);
+                this->moveToNextCharacter();
+                number.append(1, this->currentCharacter);
+                foundTerm = false;
+                while (!foundTerm) {
+                    peekCharacter = this->peekAtNextCharacter();
+                    if (std::isdigit(peekCharacter)) {
+                        this->moveToNextCharacter();
+                        number.append(1, this->currentCharacter);
+                    }
+                    else {
+                        foundTerm = true;
+                    }
+                }// end while
+            }
+            else if ((peekCharacter == '-' || peekCharacter == '+') && this->currentLine.length() > this->currentLineIndex + 3) {
+                peekCharacter = this->currentLine[this->currentLineIndex + 3];
+                if (std::isdigit(peekCharacter)) {
+                    // Move three times
+                    this->moveToNextCharacter();
+                    number.append(1, this->currentCharacter);
+                    this->moveToNextCharacter();
+                    number.append(1, this->currentCharacter);
+                    this->moveToNextCharacter();
+                    number.append(1, this->currentCharacter);
+                    foundTerm = false;
+                    while (!foundTerm) {
+                        peekCharacter = this->peekAtNextCharacter();
+                        if (std::isdigit(peekCharacter)) {
+                            this->moveToNextCharacter();
+                            number.append(1, this->currentCharacter);
+                        }
+                        else {
+                            foundTerm = true;
+                        }
+                    }// end while
+                }
+                else {
+                    foundError = true;
+                }
+            }
+            else {
+                foundError = true;
+            }
+        }
+        else {
+            foundError = true;
+        }
+    }
+    
+    if (foundError) {
+        if (std::isdigit(this->currentCharacter)) {
+            this->moveToNextCharacter();
+        }
+        result = this->errorLine();
+    }
+
+    if (number.length() > 0) {
+       std::cout << "NUM: " << number << std::endl;
+    }
+
+    return result;
 }
 
 bool LexicalAnalyzer::analyzeLetter() {
@@ -105,14 +228,14 @@ bool LexicalAnalyzer::analyzeLetter() {
     //}
     //else 
     if (this->searchKeyword(identifier)) {
-        std::cout << "KEYWORD:" << identifier << std::endl;
+        std::cout << "KEYWORD: " << identifier << std::endl;
         result = true;
     }
     //else if (identifier.compare("mod") == 0) {
     //    std::cout << identifier << std::endl;
     //}
     else {
-        std::cout << "ID:" << identifier << std::endl;
+        std::cout << "ID: " << identifier << std::endl;
         result = true;
         // ADD TO SYMBOL TABLE
         if (this->symTab != nullptr) {
@@ -173,6 +296,9 @@ bool LexicalAnalyzer::analyzeSpecialCharacter() {
             else if (this->currentCharacter == '!') {
                 result = this->errorLine();
             }
+            else {
+                std::cout << this->currentCharacter << std::endl;
+            }
         }
         else {
             std::cout << this->currentCharacter << std::endl;
@@ -219,7 +345,11 @@ bool LexicalAnalyzer::moveToNextline() {
         result = true;
         this->currentLine = temp;
         this->currentLineIndex = 0;
-        std::cout << "INPUT:" << temp << std::endl;
+        std::cout << "INPUT: " << temp << std::endl;
+    }
+    else {
+        this->currentLine = "";
+        this->currentLineIndex = 10;
     }
     return result;
 }

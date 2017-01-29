@@ -14,3 +14,20 @@ else ret_urn gcd(vxxxxxxvvvvv, u-u/v*v);
 }
 
 return void while       void main()
+
+ten = 10;
+tenDot = 10.1;
+tenDotOne = 10.01;
+tenE = 10E2;
+tenEE = 10E22;
+tenNE = 10E-22;
+tenPE = 10E+22;
+tenDotE = 10.1E22;
+tenDotNE = 10.1E-22;
+tenDotPE = 10.1E+22;
+errDot = 10.;
+errE = 10E;
+errLE = 10e;
+errNDot = .1;
+
+// This is a single line comment
