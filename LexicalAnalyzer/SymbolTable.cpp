@@ -14,7 +14,7 @@
 #include "SymbolTable.h"
 
 SymbolTable::SymbolTable(int size) {
-    this->deadSymbol = new Symbol("$DEAD$");
+    this->deadSymbol = new Symbol();
     this->size = this->getNextPrime(size);
     this->table = new Symbol[this->size];
     this->assignedValues = 0;
@@ -82,4 +82,18 @@ bool SymbolTable::isPrime(int p) {
         }
     }
     return true;
+}
+
+void SymbolTable::printTable() {
+    Symbol sym;
+    std::cout << " ---Symbol Table--- " << std::endl;
+    std::cout << "Identifier | Scope | Location" << std::endl;
+    for (int i = 0; i < this->size; i++) {
+        sym = this->table[i];
+        if (!sym.isEqual(this->deadSymbol)) {
+            std::cout << sym.getIdentifier() << " | " << sym.getDepth() << " | " << i << std::endl;
+            
+        }
+    }
+    return;
 }

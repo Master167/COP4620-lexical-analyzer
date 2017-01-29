@@ -14,7 +14,9 @@
 #ifndef SYMBOLTABLE_H
 #define SYMBOLTABLE_H
 
+#include <iostream>
 #include "Symbol.h"
+
 
 class SymbolTable {
 public:
@@ -23,6 +25,7 @@ public:
     Symbol* deadSymbol;
     
     // Functions
+    void printTable();
     bool addSymbol(Symbol* sym);
     Symbol getSymbol(std::string);
     Symbol getDeadSymbol();
