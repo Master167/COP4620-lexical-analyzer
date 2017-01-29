@@ -43,7 +43,7 @@ LexicalAnalyzer::LexicalAnalyzer(std::fstream& inputFile, std::string filename) 
 }
 
 bool LexicalAnalyzer::isReady() {
-    return (this->keywords != nullptr) && (this->specialCharacters != nullptr);
+    return (this->keywords != NULL) && (this->specialCharacters != NULL);
 }
 
 bool LexicalAnalyzer::scanFile(SymbolTable* symtab) {
@@ -62,7 +62,7 @@ bool LexicalAnalyzer::scanFile(SymbolTable* symtab) {
                 this->analyzeSpecialCharacter();
             }
         }
-        std::cout << "Finished Reading file" << std::endl;
+        //std::cout << "Finished Reading file" << std::endl;
     }
     else {
         results = false;
@@ -194,6 +194,7 @@ bool LexicalAnalyzer::analyzeDigit() {
 
     if (number.length() > 0) {
        std::cout << "NUM: " << number << std::endl;
+       //this->writeToFile("NUM: " + number + "\n");
     }
 
     return result;
@@ -229,16 +230,19 @@ bool LexicalAnalyzer::analyzeLetter() {
     //else 
     if (this->searchKeyword(identifier)) {
         std::cout << "KEYWORD: " << identifier << std::endl;
+        //this->writeToFile("KEYWORD: " + identifier + "\n");
         result = true;
     }
     //else if (identifier.compare("mod") == 0) {
     //    std::cout << identifier << std::endl;
+    //    this->writeToFile(identifier + "\n");
     //}
     else {
         std::cout << "ID: " << identifier << std::endl;
+        //this->writeToFile("ID: " + identifier + "\n");
         result = true;
         // ADD TO SYMBOL TABLE
-        if (this->symTab != nullptr) {
+        if (this->symTab != NULL) {
             Symbol* sym = new Symbol(identifier);
             this->symTab->addSymbol(sym);
         }
@@ -283,14 +287,17 @@ bool LexicalAnalyzer::analyzeSpecialCharacter() {
             }
             else {
                 std::cout << this->currentCharacter << std::endl;
+                //this->writeToFile(this->currentCharacter + "\n");
             }
         }
         else if (this->currentCharacter == '<' | this->currentCharacter == '>' | this->currentCharacter == '=' | this->currentCharacter == '!') {
             peekCharacter = this->peekAtNextCharacter();
             if (peekCharacter == '=') {
                 std::cout << this->currentCharacter;
+                //this->writeToFile(this->currentCharacter + "");
                 if (this->moveToNextCharacter()) {
                     std::cout << this->currentCharacter << std::endl;
+                    //this->writeToFile(this->currentCharacter + "\n");
                 }
             }
             else if (this->currentCharacter == '!') {
@@ -298,10 +305,12 @@ bool LexicalAnalyzer::analyzeSpecialCharacter() {
             }
             else {
                 std::cout << this->currentCharacter << std::endl;
+                //this->writeToFile(this->currentCharacter + "\n");
             }
         }
         else {
             std::cout << this->currentCharacter << std::endl;
+            //this->writeToFile(this->currentCharacter + "\n");
         }
     }
     else {
@@ -310,8 +319,13 @@ bool LexicalAnalyzer::analyzeSpecialCharacter() {
     return result;
 }
 
-bool writeToFile(std::string outputLine) {
-    return false;
+bool LexicalAnalyzer::writeToFile(std::string outputLine) {
+    std::fstream outputFile;
+    outputFile.open(this->outputFilename.c_str(), std::ios::out | std::ios::app);
+    outputFile << outputLine;
+    outputFile.flush();
+    outputFile.close();
+    return true;
 }
 
 bool LexicalAnalyzer::moveToNextCharacter() {
@@ -345,7 +359,8 @@ bool LexicalAnalyzer::moveToNextline() {
         result = true;
         this->currentLine = temp;
         this->currentLineIndex = 0;
-        std::cout << "INPUT: " << temp << std::endl;
+        //std::cout << "INPUT: " << temp << std::endl;
+        this->writeToFile("INPUT: " + temp + "\n");
     }
     else {
         this->currentLine = "";
@@ -396,7 +411,7 @@ bool LexicalAnalyzer::errorLine() {
         else if (this->searchSpecialCharacter(this->currentCharacter)) {
             continueLoop = false;
         }
-        else if (std::isblank(this->currentCharacter)) {
+        else if (this->currentCharacter == ' ') {
             continueLoop = false;
         }
     }
@@ -406,6 +421,7 @@ bool LexicalAnalyzer::errorLine() {
     else {
         remainingLine = this->currentLine.substr(startingIndex, this->currentLineIndex - startingIndex);
     }
-    std::cout << "Error:" << remainingLine << std::endl;
+    //std::cout << "Error: " << remainingLine << std::endl;
+    this->writeToFile("Error: " + remainingLine + "\n");
     return endProgram;
 }
