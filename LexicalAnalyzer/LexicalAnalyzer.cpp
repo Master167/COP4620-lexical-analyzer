@@ -77,6 +77,7 @@ bool LexicalAnalyzer::analyzeDigit() {
     bool result = true;
     bool foundTerm = false;
     bool foundError = false;
+    bool isFloat = false;
     std::string number = "";
     number.append(1, this->currentCharacter);
     char peekCharacter;
@@ -102,6 +103,7 @@ bool LexicalAnalyzer::analyzeDigit() {
 
     // Check for floating point
     if (peekCharacter == '.' && !foundError) {
+        isFloat == true;
         if (this->currentLine.length() > this->currentLineIndex + 2) {
             // String is long enough
             peekCharacter = this->currentLine[this->currentLineIndex + 2];
@@ -133,6 +135,7 @@ bool LexicalAnalyzer::analyzeDigit() {
 
     // Check for scientific notation
     if (peekCharacter == 'E' && !foundError) {
+        isFloat = true;
         if (this->currentLine.length() > this->currentLineIndex + 2) {
             // String is long enough
             peekCharacter = this->currentLine[this->currentLineIndex + 2];
@@ -196,8 +199,14 @@ bool LexicalAnalyzer::analyzeDigit() {
         result = this->errorLine(number);
     }
     else if (number.length() > 0) {
-       std::cout << "NUM: " << number << std::endl;
-       //this->writeToFile("NUM: " + number + "\n");
+        if (isFloat) {
+            std::cout << "FLOAT: " << number << std::endl;
+            //this->writeToFile("NUM: " + number + "\n");
+        }
+        else {
+            std::cout << "INT: " << number << std::endl;
+            //this->writeToFile("NUM: " + number + "\n");
+        }
     }
 
     return result;
@@ -432,7 +441,7 @@ bool LexicalAnalyzer::errorLine(std::string str) {
             endProgram = this->moveToNextCharacter();
         }
     }
-    std::cout << "Error: " << remainingLine << std::endl;
+    std::cout << "ERROR: " << remainingLine << std::endl;
     //this->writeToFile("Error: " + remainingLine + "\n");
     return endProgram;
 }
