@@ -45,7 +45,7 @@ private:
     bool searchKeyword(std::string search);
     bool searchSpecialCharacter(char search);
 
-    bool errorLine();
+    bool errorLine(std::string str);
 };
 
 #endif /* LEXICALANALYZER_H */

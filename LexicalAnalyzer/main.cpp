@@ -23,7 +23,7 @@ int main(int argc, char** argv) {
             LexicalAnalyzer* lexy = new LexicalAnalyzer(inputFile, filename);
             if (lexy->isReady()) {
                 lexy->scanFile(symTab);
-                symTab->printTable();
+                //symTab->printTable();
             }
             else {
                 std::cout << "Unable to allocate memory for lexical analyzer";

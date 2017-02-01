@@ -49,6 +49,7 @@ bool LexicalAnalyzer::isReady() {
 
 bool LexicalAnalyzer::scanFile(SymbolTable* symtab) {
     bool results = true;
+    bool continueLoop = true;
     if (this->isReady()) {
         this->symTab = symtab;
         while (this->moveToNextCharacter()) {
@@ -82,12 +83,14 @@ bool LexicalAnalyzer::analyzeDigit() {
     // Get Numbers
     while (!foundTerm) {
         peekCharacter = this->peekAtNextCharacter();
-        if (peekCharacter != '$') {
+        if (peekCharacter != '$' && peekCharacter != '.' && peekCharacter != ' '  && peekCharacter != 'E') {
             if (std::isdigit(peekCharacter)) {
                 this->moveToNextCharacter();
                 number.append(1, this->currentCharacter);
             }
             else {
+                number.append(1, peekCharacter);
+                foundError = true;
                 foundTerm = true;
             }
         }
@@ -98,7 +101,7 @@ bool LexicalAnalyzer::analyzeDigit() {
     }
 
     // Check for floating point
-    if (peekCharacter == '.') {
+    if (peekCharacter == '.' && !foundError) {
         if (this->currentLine.length() > this->currentLineIndex + 2) {
             // String is long enough
             peekCharacter = this->currentLine[this->currentLineIndex + 2];
@@ -190,10 +193,9 @@ bool LexicalAnalyzer::analyzeDigit() {
         if (std::isdigit(this->currentCharacter)) {
             this->moveToNextCharacter();
         }
-        result = this->errorLine();
+        result = this->errorLine(number);
     }
-
-    if (number.length() > 0) {
+    else if (number.length() > 0) {
        std::cout << "NUM: " << number << std::endl;
        //this->writeToFile("NUM: " + number + "\n");
     }
@@ -225,11 +227,10 @@ bool LexicalAnalyzer::analyzeLetter() {
         }
     }
     // peekCharacter could be a delimiter, digit, or special character
-    //if ((std::isdigit(peekCharacter) | std::ispunct(peekCharacter)) & !std::isspace(peekCharacter)) {
-    //    result = this->errorLine();
-    //}
-    //else 
-    if (this->searchKeyword(identifier)) {
+    if ((std::isdigit(peekCharacter) | std::ispunct(peekCharacter)) & !std::isspace(peekCharacter)) {
+        result = this->errorLine(identifier);
+    }
+    else if (this->searchKeyword(identifier)) {
         std::cout << "KEYWORD: " << identifier << std::endl;
         //this->writeToFile("KEYWORD: " + identifier + "\n");
         result = true;
@@ -255,6 +256,8 @@ bool LexicalAnalyzer::analyzeSpecialCharacter() {
     bool result = false;
     int commentCounter = 0;
     char peekCharacter;
+    std::string character = "";
+    character.append(1, this->currentCharacter);
     if (this->searchSpecialCharacter(this->currentCharacter)) {
         if (this->currentCharacter == '/') {
             peekCharacter = this->peekAtNextCharacter();
@@ -287,30 +290,30 @@ bool LexicalAnalyzer::analyzeSpecialCharacter() {
                 result == true;
             }
             else {
-                std::cout << this->currentCharacter << std::endl;
+                std::cout << character << std::endl;
                 //this->writeToFile(this->currentCharacter + "\n");
             }
         }
         else if (this->currentCharacter == '<' | this->currentCharacter == '>' | this->currentCharacter == '=' | this->currentCharacter == '!') {
             peekCharacter = this->peekAtNextCharacter();
             if (peekCharacter == '=') {
-                std::cout << this->currentCharacter;
+                std::cout << character;
                 //this->writeToFile(this->currentCharacter + "");
                 if (this->moveToNextCharacter()) {
-                    std::cout << this->currentCharacter << std::endl;
+                    std::cout << character << std::endl;
                     //this->writeToFile(this->currentCharacter + "\n");
                 }
             }
             else if (this->currentCharacter == '!') {
-                result = this->errorLine();
+                result = this->errorLine(character);
             }
             else {
-                std::cout << this->currentCharacter << std::endl;
+                std::cout << character << std::endl;
                 //this->writeToFile(this->currentCharacter + "\n");
             }
         }
         else {
-            std::cout << this->currentCharacter << std::endl;
+            std::cout << character << std::endl;
             //this->writeToFile(this->currentCharacter + "\n");
         }
         if (this->currentCharacter == '{') {
@@ -321,7 +324,7 @@ bool LexicalAnalyzer::analyzeSpecialCharacter() {
         }
     }
     else {
-        result = this->errorLine();
+        result = this->errorLine(character);
     }
     return result;
 }
@@ -347,6 +350,7 @@ bool LexicalAnalyzer::moveToNextCharacter() {
     else if (this->currentLineIndex < this->currentLine.length()) {
         result = true;
     }
+
     if (result) {
         this->currentCharacter = this->currentLine[this->currentLineIndex];
     }
@@ -366,8 +370,8 @@ bool LexicalAnalyzer::moveToNextline() {
         result = true;
         this->currentLine = temp;
         this->currentLineIndex = 0;
-        //std::cout << "INPUT: " << temp << std::endl;
-        this->writeToFile("INPUT: " + temp + "\n");
+        std::cout << "INPUT: " << temp << std::endl;
+        //this->writeToFile("INPUT: " + temp + "\n");
     }
     else {
         this->currentLine = "";
@@ -404,31 +408,31 @@ bool LexicalAnalyzer::searchSpecialCharacter(char search) {
     return found;
 }
 
-bool LexicalAnalyzer::errorLine() {
+bool LexicalAnalyzer::errorLine(std::string str) {
     bool endProgram = false;
     bool continueLoop = true;
-    int startingIndex = this->currentLineIndex;
-    std::string remainingLine;
+    std::string remainingLine = str;
+    char peekCharacter;
     //Going to find the end of this current token
     while (continueLoop) {
-        endProgram = this->moveToNextCharacter();
-        if (this->currentLineIndex == 0) {
+        peekCharacter = this->peekAtNextCharacter();
+        if (peekCharacter == '$') {
             continueLoop = false;
         }
-        else if (this->searchSpecialCharacter(this->currentCharacter)) {
+        else if (this->searchSpecialCharacter(peekCharacter)) {
             continueLoop = false;
         }
-        else if (this->currentCharacter == ' ') {
+        else if (peekCharacter == ' ') {
             continueLoop = false;
         }
+        else {
+            remainingLine.append(1, peekCharacter);
+        }
+        if (continueLoop) {
+            endProgram = this->moveToNextCharacter();
+        }
     }
-    if (this->currentLineIndex == 0) {
-        remainingLine = this->currentLine.substr(startingIndex);
-    }
-    else {
-        remainingLine = this->currentLine.substr(startingIndex, this->currentLineIndex - startingIndex);
-    }
-    //std::cout << "Error: " << remainingLine << std::endl;
-    this->writeToFile("Error: " + remainingLine + "\n");
+    std::cout << "Error: " << remainingLine << std::endl;
+    //this->writeToFile("Error: " + remainingLine + "\n");
     return endProgram;
 }
