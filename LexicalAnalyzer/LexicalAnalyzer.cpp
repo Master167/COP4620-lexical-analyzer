@@ -89,6 +89,9 @@ bool LexicalAnalyzer::analyzeDigit() {
                 this->moveToNextCharacter();
                 number.append(1, this->currentCharacter);
             }
+            else if (this->searchSpecialCharacter(peekCharacter)) {
+                foundTerm = true;
+            }
             else {
                 number.append(1, peekCharacter);
                 foundError = true;
@@ -298,7 +301,7 @@ bool LexicalAnalyzer::analyzeSpecialCharacter() {
                 this->moveToNextline();
                 result == true;
             }
-            else {
+            else if (character.length() > 0) {
                 std::cout << character << std::endl;
                 //this->writeToFile(this->currentCharacter + "\n");
             }
@@ -316,12 +319,12 @@ bool LexicalAnalyzer::analyzeSpecialCharacter() {
             else if (this->currentCharacter == '!') {
                 result = this->errorLine(character);
             }
-            else {
+            else if (character.length() > 0) {
                 std::cout << character << std::endl;
                 //this->writeToFile(this->currentCharacter + "\n");
             }
         }
-        else {
+        else if (character.length() > 0) {
             std::cout << character << std::endl;
             //this->writeToFile(this->currentCharacter + "\n");
         }
