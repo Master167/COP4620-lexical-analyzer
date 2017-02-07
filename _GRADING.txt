@@ -1,0 +1,149 @@
+# n00725913
+# Michael Frederick
+# Compilers Project 1
+# Grade 24/25
+#
+#
+# Michael -- good job
+#
+#
+#
+# # put in to defeat virus scan.
+#
+# 19/20 - 1. Working code.
+# 5/5   - 2. Documentation:
+#
+#
+# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#
+# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#
+# running n00725913d on f0
+# while (b!=3)
+# { int x; x=q+2; }
+# -----------RESULTS------------------------
+#
+# INPUT: while (b!=3)
+# KEYWORD: while
+# (
+# ID: b Scope: 0
+# !!
+#
+# !! token???????????????????????????????????????
+#
+#
+#
+#
+#
+#
+# INT: 3
+# )
+# INPUT: { int x; x=q+2; }
+# {
+# KEYWORD: int
+# ID: x Scope: 1
+# ;
+# ID: x Scope: 1
+# =
+# ID: q Scope: 1
+# +
+# INT: 2
+# ;
+# }
+#
+#
+# -1
+# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#
+# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#
+# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#
+# test f1 worked fine.
+# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#
+# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#
+# running n00725913d on f2
+# void main(void)
+# {
+#         b = bbbb / 24567;
+#         b = b + 3.44E05;
+#         b = b + 3.44E-05;
+#         b =  3.44;
+#         b = b + 3.44E -05;
+# }
+# -----------RESULTS------------------------
+#
+# INPUT: void main(void)
+# KEYWORD: void
+# ID: main Scope: 0
+# (
+# KEYWORD: void
+# )
+# INPUT: {
+# {
+# INPUT:         b = bbbb / 24567;
+# ID: b Scope: 1
+# =
+# ID: bbbb Scope: 1
+# /
+# INT: 24567
+# ;
+# INPUT:         b = b + 3.44E05;
+# ID: b Scope: 1
+# =
+# ID: b Scope: 1
+# +
+# FLOAT: 3.44E05
+# ;
+# INPUT:         b = b + 3.44E-05;
+# ID: b Scope: 1
+# =
+# ID: b Scope: 1
+# +
+# FLOAT: 3.44E-05
+# ;
+# INPUT:         b =  3.44;
+# ID: b Scope: 1
+# =
+# INT: 3.44
+#
+# Not bad, but this should probably not be called an INT. I am
+# not penalizing, but this will mess up project 3.
+#
+#
+#
+#
+#
+# ;
+# INPUT:         b = b + 3.44E -05;
+# ID: b Scope: 1
+# =
+# ID: b Scope: 1
+# +
+# ERROR: 3.44
+# -
+# INT: 05
+# ;
+# INPUT: }
+# }
+#
+#
+# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#
+# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#
+# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#
+# test f3 worked fine.
+# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#
+# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#
+# test f4 worked fine.
+# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#
+# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#
+# test f5 worked fine.
