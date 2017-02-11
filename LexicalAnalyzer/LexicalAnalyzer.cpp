@@ -106,8 +106,8 @@ bool LexicalAnalyzer::analyzeDigit() {
 
     // Check for floating point
     if (peekCharacter == '.' && !foundError) {
-        isFloat == true;
         if (this->currentLine.length() > this->currentLineIndex + 2) {
+            isFloat = true;
             // String is long enough
             peekCharacter = this->currentLine[this->currentLineIndex + 2];
             if (std::isdigit(peekCharacter)) {
@@ -138,8 +138,8 @@ bool LexicalAnalyzer::analyzeDigit() {
 
     // Check for scientific notation
     if (peekCharacter == 'E' && !foundError) {
-        isFloat = true;
         if (this->currentLine.length() > this->currentLineIndex + 2) {
+            isFloat = true;
             // String is long enough
             peekCharacter = this->currentLine[this->currentLineIndex + 2];
             if (std::isdigit(peekCharacter)) {
@@ -312,7 +312,7 @@ bool LexicalAnalyzer::analyzeSpecialCharacter() {
                 std::cout << character;
                 //this->writeToFile(this->currentCharacter + "");
                 if (this->moveToNextCharacter()) {
-                    std::cout << character << std::endl;
+                    std::cout << this->currentCharacter << std::endl;
                     //this->writeToFile(this->currentCharacter + "\n");
                 }
             }
